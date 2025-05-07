@@ -76,3 +76,60 @@ kubectl describe pod private-puller -n private-test
 You can attach a secret to a ServiceAccount for all pods
 
 Works with DockerHub, Harbor, ECR, GitHub Container Registry, etc.
+
+---
+
+Great observation — you’re using Podman, not Docker, and Podman doesn’t default to Docker Hub unless explicitly configured.
+
+This is another real-world security scenario where container tooling differences affect how credentials and image pulls work — very relevant for CKS.
+
+🛠 Fix: Configure Podman to Use Docker Hub
+✅ Step 1: Edit registries.conf
+Open or create this file:
+
+bash
+Copy
+Edit
+sudo nano /etc/containers/registries.conf
+Add the following under [registries.search]:
+
+toml
+Copy
+Edit
+[registries.search]
+registries = ['docker.io']
+Save and exit.
+
+✅ Step 2: Login to Docker Hub
+Now retry:
+
+bash
+Copy
+Edit
+podman login docker.io
+You should see:
+
+makefile
+Copy
+Edit
+Username: your_dockerhub_username
+Password:
+Login Succeeded!
+This will create or update your ~/.docker/config.json with Docker Hub credentials — the same file used by kubectl create secret docker-registry.
+
+✅ Step 3: Create Pull Secret Using Podman Credentials
+bash
+Copy
+Edit
+kubectl create secret docker-registry regcred \
+  --docker-username=your_dockerhub_username \
+  --docker-password='yourpassword' \
+  --docker-email=you@example.com \
+  -n private-test
+💡 CKS Tips
+Podman is rootless and security-focused — a good alternative to Docker
+
+In CKS exams, focus is on Kubernetes behavior, not container engine
+
+Always test your imagePullSecrets before using in production
+
