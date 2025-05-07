@@ -6,74 +6,54 @@ Cosign for image signing
 
 Kyverno for policy enforcement via verifyImages
 
-📁 Structure
+---
+
+📁 Directory Structure
 bash
 Copy
 Edit
 cks-labs/
 └── 08-cosign-verify/
-    ├── install-kyverno.sh
-    ├── install-cosign.sh
-    ├── generate-keys.sh
-    ├── cosign-sign.sh
-    ├── verify-policy.yaml
-    ├── signed-pod.yaml
-    ├── unsigned-pod.yaml
+    ├── 00-namespace.yaml
+    ├── 01-install-kyverno.sh
+    ├── 02-install-cosign.sh
+    ├── 03-generate-keys.sh
+    ├── 04-create-key-secret.sh
+    ├── 05-cosign-sign.sh
+    ├── 06-verify-policy.yaml
+    ├── 07-signed-pod.yaml
+    ├── 08-unsigned-pod.yaml
     ├── cleanup.sh
     └── README.md
 
     ---
 
-    🚀 Run Test
-bash
-Copy
-Edit
-kubectl apply -f verify-policy.yaml
-
-kubectl apply -f signed-pod.yaml    # ✅ Should succeed
-kubectl apply -f unsigned-pod.yaml  # ❌ Should fail
-🧹 cleanup.sh
-bash
-Copy
-Edit
-#!/bin/bash
-kubectl delete -f verify-policy.yaml
-kubectl delete pod signed-app unsigned-app --ignore-not-found
-helm uninstall kyverno -n kyverno
-kubectl delete ns kyverno
-📘 README.md Excerpt
+    📘 Updated README.md Excerpt
 markdown
 Copy
 Edit
-# Scenario 8 – Image Signing with Cosign + Kyverno
+# 🔐 Scenario 8 – Cosign + Kyverno with Secret-based Public Key
 
-## Goal
-Only allow signed container images using Kyverno's `verifyImages` admission control.
+## 🎯 Goal
+Block unsigned images using Kyverno’s `verifyImages` rule, referencing a public key from a Kubernetes Secret.
 
-## Prerequisites
-- Kubernetes cluster
-- Docker Hub access
-- `kubectl` + `helm`
-- `cosign` installed (via `install-cosign.sh`)
+## ✅ Steps
+1. Create namespace (`cosign-verify`)
+2. Generate key pair (`03-generate-keys.sh`)
+3. Sign image with Cosign (`05-cosign-sign.sh`)
+4. Create Secret for public key (`04-create-key-secret.sh`)
+5. Apply Kyverno policy (`06-verify-policy.yaml`)
+6. Test pods in `cosign-verify` namespace
 
-## Steps
-1. Install Kyverno (`install-kyverno.sh`)
-2. Install Cosign and generate keys (`install-cosign.sh`, `generate-keys.sh`)
-3. Sign your image (`cosign-sign.sh`)
-4. Apply policy (`verify-policy.yaml`)
-5. Test signed vs unsigned pods
-
-## Test
+## 🧪 Test
 ```bash
-kubectl apply -f signed-pod.yaml     # ✅
-kubectl apply -f unsigned-pod.yaml   # ❌
-CKS Tips
-Use verifyImages to lock down image provenance
+kubectl apply -f 07-signed-pod.yaml     # ✅ Allowed
+kubectl apply -f 08-unsigned-pod.yaml   # ❌ Denied
 
-Embed public keys for static validation
+---
 
-Kyverno can mutate image to pinned digest (mutateDigest: true)
+💡 CKS Tip
+Using a keyRef from a Secret is preferred over embedding the key in YAML
 
-yaml
-Copy
-Edit
+Ensure the namespace is correct or Kyverno will not find the secret
+

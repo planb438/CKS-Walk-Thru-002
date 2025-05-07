@@ -1,21 +1,21 @@
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
-  name: verify-image-signatures
+  name: require-signed-images
 spec:
   validationFailureAction: enforce
   background: false
   rules:
-    - name: require-signed-images
+    - name: verify-signatures
       match:
         any:
           - resources:
               kinds:
                 - Pod
       verifyImages:
-        - image: "docker.io/YOUR_DOCKERHUB/*"
-          key: |
-            -----BEGIN PUBLIC KEY-----
-            YOUR-COSIGN-PUBLIC-KEY-CONTENT
-            -----END PUBLIC KEY-----
+        - image: "docker.io/chris438/node-k8s-app:latest"
+          keyRef:
+            name: cosign-pubkey
+            namespace: cosign-verify
+            key: cosign.pub
           mutateDigest: true

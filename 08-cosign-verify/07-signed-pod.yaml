@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: signed-app
+  namespace: cosign-verify
+spec:
+  containers:
+  - name: app
+    image: docker.io/chris438/node-k8s-app:latest
