@@ -60,17 +60,17 @@ Apply pod-level and container-level hardening using SecurityContext fields.
 
 ## 🔍 To Test
 ```bash
-kubectl apply -f 01-run-as-non-root.yaml
-kubectl logs non-root-pod
+kubectl logs non-root-pod -n security-context
+kubectl logs non-root-pod -n security-context
 
 kubectl apply -f 02-readonly-rootfs.yaml
-kubectl describe pod readonly-fs-pod
+kubectl describe pod readonly-fs-pod -n security-context
 
 kubectl apply -f 03-seccomp-profile.yaml
-kubectl get pod seccomp-restricted-pod -o json | jq '.metadata.annotations'
+kubectl get pod seccomp-restricted-pod -n security-context -o json | jq '.metadata.annotations'
 
 kubectl apply -f 04-drop-capabilities.yaml
-kubectl exec -it drop-cap-pod -- sh
+kubectl -n security-context exec -it drop-cap-pod -- sh
 
 kubectl apply -f 05-user-group.yaml
-kubectl logs uid-gid-pod
+kubectl logs uid-gid-pod -n security-context
