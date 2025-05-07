@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: readonly-fs-pod
+spec:
+  containers:
+  - name: app
+    image: busybox
+    command: ["sh", "-c", "echo test > /tmp/test.txt"]
+    securityContext:
+      readOnlyRootFilesystem: true
+      runAsUser: 1000
