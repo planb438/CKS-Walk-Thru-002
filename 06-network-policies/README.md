@@ -43,6 +43,9 @@ kubectl exec -n netpol-test trusted-client -- curl -s backend
 
 # Test from attacker (should fail)
 kubectl exec -n netpol-test attacker -- wget -qO- backend || echo "Blocked"
+
+-
+
 📘 README.md Summary
 markdown
 Copy
