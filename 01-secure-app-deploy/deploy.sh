@@ -4,6 +4,9 @@
 echo "[+] Creating namespace"
 kubectl create ns dev
 
+echo "[+] Installing Kyverno CRDs"
+kubectl apply -f https://raw.githubusercontent.com/kyverno/kyverno/main/config/crds/kyverno-crds.yaml
+
 echo "[+] Installing Helm chart (node app)"
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
