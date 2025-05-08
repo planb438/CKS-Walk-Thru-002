@@ -1,21 +1,18 @@
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
-  name: require-signed-images
+  name: verify-sigstore-cosign
 spec:
   validationFailureAction: enforce
   background: false
   rules:
-    - name: verify-signatures
+    - name: verify-signed
       match:
         any:
           - resources:
               kinds:
                 - Pod
       verifyImages:
-        - image: "docker.io/chris438/node-k8s-app:latest"
-          keyRef:
-            name: cosign-pubkey
-            namespace: cosign-lab
-            key: cosign.pub
+        - image: "ghcr.io/sigstore/cosign*"
+          key: "https://Fulcio.sigstore.dev/ghcr.pub"
           mutateDigest: true
