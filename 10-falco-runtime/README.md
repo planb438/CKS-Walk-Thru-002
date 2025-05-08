@@ -63,3 +63,12 @@ Falco detects exec, chmod, connect, and other syscall-based behaviors
 Not a replacement for audit logs — it's runtime visibility
 
 In CKS, may be asked to investigate suspicious behavior  
+
+---
+
+🧠 CKS Exam Tips on Falco
+exec, chmod, connect, and write are commonly flagged
+
+Know how to read alerts, not just trigger them
+
+Falco logs go to the pod logs by default (or sidekick / file output if configured)
