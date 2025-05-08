@@ -16,6 +16,6 @@ spec:
         - image: "docker.io/chris438/node-k8s-app:latest"
           keyRef:
             name: cosign-pubkey
-            namespace: cosign-verify
+            namespace: cosign-lab
             key: cosign.pub
           mutateDigest: true

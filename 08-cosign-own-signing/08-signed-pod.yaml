@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: signed-app
-  namespace: cosign-verify
+  namespace: cosign-lab
 spec:
   containers:
   - name: app
