@@ -15,7 +15,11 @@ sudo cp audit-policy.yaml /etc/kubernetes/
 echo "[+] Backing up kube-apiserver manifest"
 sudo cp /etc/kubernetes/manifests/kube-apiserver.yaml /etc/kubernetes/manifests/kube-apiserver.yaml.bak
 
-echo "[+] Patching kube-apiserver manifest...Skipping for now.... Do manually"
-# sudo sed -i '/--secure-port=6443/a \    - --audit-policy-file=/etc/kubernetes/audit-policy.yaml\n    - --audit-log-path=/var/log/kubernetes/audit.log' /etc/kubernetes/manifests/kube-apiserver.yaml
-
+echo "[+] Patching kube-apiserver manifest...Skipping for now.... Do manually - Look at the file /etc/kubernetes/manifests/kube-apiserver.yaml and add the following lines to the spec.containers.args section:"
+echo "    - --audit-log-maxage=30"
+echo "    - --audit-log-maxbackup=10"
+echo "    - --audit-log-maxsize=100"
+echo "    - --audit-log-path=/var/log/kubernetes/audit.log"
+echo "    - --audit-policy-file=/etc/kubernetes/audit-policy.yaml"
+echo "    - --audit-log-format=json"
 echo "[+] kube-apiserver will restart via static pod automatically"
