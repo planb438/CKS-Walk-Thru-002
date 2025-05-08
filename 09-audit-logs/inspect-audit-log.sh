@@ -1,3 +1,3 @@
 #!/bin/bash
-echo "[+] Searching for secret access in audit log"
-sudo grep test-audit /var/log/kubernetes/audit.log | jq .
+echo "[+] Showing audit log entry for secret read (if exists):"
+sudo grep '"name":"test-audit"' /var/log/kubernetes/audit.log | jq .
